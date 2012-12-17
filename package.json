@@ -1,7 +1,7 @@
 {
   "name": "walkabout",
   "description": "Path Utility for node.js",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "homepage": "https://github.com/mattinsler/walkabout",
   "author": {
     "name": "Matt Insler",
@@ -29,7 +29,9 @@
     "test": "grunt test"
   },
   "dependencies": {
-    "underscore": "~1.4.3"
+    "underscore": "~1.4.3",
+    "mkdirp": "~0.3.4",
+    "rimraf": "~2.0.3"
   },
   "devDependencies": {
     "mocha": "~1.7.0",

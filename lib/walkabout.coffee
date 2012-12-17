@@ -1,8 +1,10 @@
 fs = require 'fs'
 util = require 'util'
+mkdirp = require 'mkdirp'
 PATH = require 'path'
 
 _ = require 'underscore'
+rimraf = require 'rimraf'
 
 class Path
   constructor: (path = process.cwd()) ->
@@ -49,6 +51,12 @@ class Path
   
   mkdir_sync: (mode = 0o777) ->
     fs.mkdirSync @path, mode
+  
+  mkdirp: (mode = 0o777, callback) ->
+    mkdirp.sync @path, mode, callback
+  
+  mkdirp_sync: (mode = 0o777) ->
+    mkdirp.sync @path, mode
 
   readdir: (callback) ->
     fs.readdir @path, (err, files) =>
@@ -84,6 +92,12 @@ class Path
   
   unlink_sync: ->
     fs.unlinkSync @path
+  
+  rm_rf: (callback) ->
+    rimraf @path, callback
+  
+  rm_rf_sync: ->
+    rimraf.sync @path
 
   # HELPER METHODS
   is_directory_empty: (callback) ->
