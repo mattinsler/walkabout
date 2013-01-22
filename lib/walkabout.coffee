@@ -9,6 +9,7 @@ rimraf = require 'rimraf'
 class Path
   constructor: (path = process.cwd()) ->
     @path = PATH.normalize(path.toString())
+    @absolute_path = PATH.resolve(@path)
     # [x, x, @basename, @extension] = /^(.*\/)?(?:$|(.+?)(?:(\.[^.]*$)|$))/.exec(@path)
     # @filename = (@basename or '') + (@extension or '')
     # @extension = @extension.slice(1) if @extension?

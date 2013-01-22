@@ -1,7 +1,7 @@
 {
   "name": "walkabout",
   "description": "Path Utility for node.js",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/mattinsler/walkabout",
   "author": {
     "name": "Matt Insler",
@@ -21,7 +21,7 @@
       "url": "https://github.com/mattinsler/walkabout/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/walkabout",
+  "main": "dist/walkabout",
   "engines": {
     "node": ">= 0.6.0"
   },

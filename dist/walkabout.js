@@ -21,6 +21,7 @@
         path = process.cwd();
       }
       this.path = PATH.normalize(path.toString());
+      this.absolute_path = PATH.resolve(this.path);
       this.dirname = PATH.dirname(this.path);
       this.extension = PATH.extname(this.path);
       this.filename = PATH.basename(this.path);
