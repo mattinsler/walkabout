@@ -31,74 +31,92 @@ class Path
     @path
 
   require: ->
-    require @path
+    require(@path)
 
   # PATH METHODS
   exists: (callback) ->
-    PATH.exists @path, callback
+    PATH.exists(@path, callback)
 
   exists_sync: ->
-    PATH.existsSync @path
+    PATH.existsSync(@path)
 
   # FS METHODS
   create_read_stream: ->
-    fs.createReadStream @path
+    fs.createReadStream(@path)
   
   create_write_stream: ->
-    fs.createWriteStream @path
+    fs.createWriteStream(@path)
+  
+  link: (dest, callback) ->
+    fs.link(@path, (if Path.isPath(dest) then dest.path else dest), callback)
+  
+  link_sync: (dest) ->
+    fs.linkSync(@path, (if Path.isPath(dest) then dest.path else dest))
+  
+  symlink: (dest, type, callback) ->
+    fs.symlink(@path, (if Path.isPath(dest) then dest.path else dest), type, callback)
+
+  symlink_sync: (dest, type) ->
+    fs.symlinkSync(@path, (if Path.isPath(dest) then dest.path else dest), type)
   
   mkdir: (mode = 0o777, callback) ->
-    fs.mkdir @path, mode, callback
+    fs.mkdir(@path, mode, callback)
   
   mkdir_sync: (mode = 0o777) ->
-    fs.mkdirSync @path, mode
+    fs.mkdirSync(@path, mode)
   
   mkdirp: (mode = 0o777, callback) ->
-    mkdirp.sync @path, mode, callback
+    mkdirp.sync(@path, mode, callback)
   
   mkdirp_sync: (mode = 0o777) ->
-    mkdirp.sync @path, mode
+    mkdirp.sync(@path, mode)
 
   readdir: (callback) ->
     fs.readdir @path, (err, files) =>
       return callback(err) if err?
-      callback(err, files.map (f) => @.join(f))
+      callback(err, files.map (f) => @join(f))
 
   readdir_sync: ->
-    fs.readdirSync(@path).map (f) => @.join(f)
+    fs.readdirSync(@path).map (f) => @join(f)
   
   readlink: (callback) ->
-    fs.readlink @path, callback
+    fs.readlink(@path, callback)
   
   readlink_sync: ->
-    fs.readlinkSync @path
+    fs.readlinkSync(@path)
   
-  read_file: (encoding = undefined, callback) ->
+  realpath: (cache, callback) ->
+    fs.realpath(@path, cache, callback)
+  
+  realpath_sync: (cache) ->
+    fs.realpathSync(@path, cache)
+  
+  read_file: (encoding, callback) ->
     fs.readFile(@path, encoding, callback)
 
-  read_file_sync: (encoding = undefined) ->
-    fs.readFileSync @path, encoding
+  read_file_sync: (encoding) ->
+    fs.readFileSync(@path, encoding)
   
   stat: (callback) ->
-    fs.stat @path, callback
+    fs.stat(@path, callback)
   
   stat_sync: ->
-    fs.statSync @path
+    fs.statSync(@path)
 
-  write_file_sync: (data, encoding = undefined) ->
-    fs.writeFileSync @path, data, encoding
+  write_file_sync: (data, encoding) ->
+    fs.writeFileSync(@path, data, encoding)
   
   unlink: (callback) ->
-    fs.unlink @path, callback
+    fs.unlink(@path, callback)
   
   unlink_sync: ->
-    fs.unlinkSync @path
+    fs.unlinkSync(@path)
   
   rm_rf: (callback) ->
-    rimraf @path, callback
+    rimraf(@path, callback)
   
   rm_rf_sync: ->
-    rimraf.sync @path
+    rimraf.sync(@path)
 
   # HELPER METHODS
   is_directory_empty: (callback) ->
@@ -129,11 +147,11 @@ class Path
         util.pump(input, output, callback)
   
   copy_sync: (to) ->
-    throw new Error("File #{@} does not exist.") unless @.exists_sync()
+    throw new Error("File #{@} does not exist.") unless @exists_sync()
     dest = if Path.isPath(to) then to else new Path(to)
     throw new Error("File #{to} already exists.") if dest.exists_sync()
 
-    dest.write_file_sync(@.read_file_sync())
+    dest.write_file_sync(@read_file_sync())
   
   is_directory: (callback) ->
     @stat (err, stats) ->

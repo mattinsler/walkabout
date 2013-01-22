@@ -70,6 +70,22 @@
       return fs.createWriteStream(this.path);
     };
 
+    Path.prototype.link = function(dest, callback) {
+      return fs.link(this.path, (Path.isPath(dest) ? dest.path : dest), callback);
+    };
+
+    Path.prototype.link_sync = function(dest) {
+      return fs.linkSync(this.path, (Path.isPath(dest) ? dest.path : dest));
+    };
+
+    Path.prototype.symlink = function(dest, type, callback) {
+      return fs.symlink(this.path, (Path.isPath(dest) ? dest.path : dest), type, callback);
+    };
+
+    Path.prototype.symlink_sync = function(dest, type) {
+      return fs.symlinkSync(this.path, (Path.isPath(dest) ? dest.path : dest), type);
+    };
+
     Path.prototype.mkdir = function(mode, callback) {
       if (mode == null) {
         mode = 0x1ff;
@@ -125,17 +141,19 @@
       return fs.readlinkSync(this.path);
     };
 
+    Path.prototype.realpath = function(cache, callback) {
+      return fs.realpath(this.path, cache, callback);
+    };
+
+    Path.prototype.realpath_sync = function(cache) {
+      return fs.realpathSync(this.path, cache);
+    };
+
     Path.prototype.read_file = function(encoding, callback) {
-      if (encoding == null) {
-        encoding = void 0;
-      }
       return fs.readFile(this.path, encoding, callback);
     };
 
     Path.prototype.read_file_sync = function(encoding) {
-      if (encoding == null) {
-        encoding = void 0;
-      }
       return fs.readFileSync(this.path, encoding);
     };
 
@@ -148,9 +166,6 @@
     };
 
     Path.prototype.write_file_sync = function(data, encoding) {
-      if (encoding == null) {
-        encoding = void 0;
-      }
       return fs.writeFileSync(this.path, data, encoding);
     };
 
