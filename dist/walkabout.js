@@ -79,10 +79,16 @@
     };
 
     Path.prototype.symlink = function(dest, type, callback) {
+      if (type == null) {
+        type = 'file';
+      }
       return fs.symlink(this.path, (Path.isPath(dest) ? dest.path : dest), type, callback);
     };
 
     Path.prototype.symlink_sync = function(dest, type) {
+      if (type == null) {
+        type = 'file';
+      }
       return fs.symlinkSync(this.path, (Path.isPath(dest) ? dest.path : dest), type);
     };
 
@@ -142,18 +148,30 @@
     };
 
     Path.prototype.realpath = function(cache, callback) {
+      if (cache == null) {
+        cache = void 0;
+      }
       return fs.realpath(this.path, cache, callback);
     };
 
     Path.prototype.realpath_sync = function(cache) {
+      if (cache == null) {
+        cache = void 0;
+      }
       return fs.realpathSync(this.path, cache);
     };
 
     Path.prototype.read_file = function(encoding, callback) {
+      if (encoding == null) {
+        encoding = 'utf8';
+      }
       return fs.readFile(this.path, encoding, callback);
     };
 
     Path.prototype.read_file_sync = function(encoding) {
+      if (encoding == null) {
+        encoding = 'utf8';
+      }
       return fs.readFileSync(this.path, encoding);
     };
 
@@ -165,7 +183,17 @@
       return fs.statSync(this.path);
     };
 
+    Path.prototype.write_file = function(data, encoding, callback) {
+      if (encoding == null) {
+        encoding = 'utf8';
+      }
+      return fs.writeFile(this.path, data, encoding, callback);
+    };
+
     Path.prototype.write_file_sync = function(data, encoding) {
+      if (encoding == null) {
+        encoding = 'utf8';
+      }
       return fs.writeFileSync(this.path, data, encoding);
     };
 

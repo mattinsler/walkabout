@@ -53,10 +53,10 @@ class Path
   link_sync: (dest) ->
     fs.linkSync(@path, (if Path.isPath(dest) then dest.path else dest))
   
-  symlink: (dest, type, callback) ->
+  symlink: (dest, type = 'file', callback) ->
     fs.symlink(@path, (if Path.isPath(dest) then dest.path else dest), type, callback)
 
-  symlink_sync: (dest, type) ->
+  symlink_sync: (dest, type = 'file') ->
     fs.symlinkSync(@path, (if Path.isPath(dest) then dest.path else dest), type)
   
   mkdir: (mode = 0o777, callback) ->
@@ -85,16 +85,16 @@ class Path
   readlink_sync: ->
     fs.readlinkSync(@path)
   
-  realpath: (cache, callback) ->
+  realpath: (cache = undefined, callback) ->
     fs.realpath(@path, cache, callback)
   
-  realpath_sync: (cache) ->
+  realpath_sync: (cache = undefined) ->
     fs.realpathSync(@path, cache)
   
-  read_file: (encoding, callback) ->
+  read_file: (encoding = 'utf8', callback) ->
     fs.readFile(@path, encoding, callback)
 
-  read_file_sync: (encoding) ->
+  read_file_sync: (encoding = 'utf8') ->
     fs.readFileSync(@path, encoding)
   
   stat: (callback) ->
@@ -102,8 +102,11 @@ class Path
   
   stat_sync: ->
     fs.statSync(@path)
-
-  write_file_sync: (data, encoding) ->
+  
+  write_file: (data, encoding = 'utf8', callback) ->
+    fs.writeFile(@path, data, encoding, callback)
+    
+  write_file_sync: (data, encoding = 'utf8') ->
     fs.writeFileSync(@path, data, encoding)
   
   unlink: (callback) ->
@@ -162,6 +165,31 @@ class Path
   
   is_absolute: ->
     @path[0] is '/'
+  
+  # ls: (opts, callback) ->
+  #   if typeof opts is 'function'
+  #     callback = opts
+  #     opts = {}
+  #   
+  #   opts.filter ?= -> true
+  #   if opts.extensions
+  #     ext = _(opts.extensions).inject ((o, e) -> o[e] = 1; o), {}
+  #     _filter = opts.filter
+  #     opts.filter = (p) ->
+  #       return false unless ext[p.extension]?
+  #       _filter(p)
+  #     delete opts.extensions
+  #   
+  #   @readdir (err, files) ->
+  #     return callback(err) if err?
+  #     
+  #     if opts.recursive
+  #       dirs = files.filter (f) -> f.is_directory_sync()
+  #         
+  #       _.chain(files).
+  #       
+  #     files = files.filter(opts.filter)
+  #     callback(null, files)
   
   ls_sync: (opts = {}) ->
     opts.filter ?= -> true
