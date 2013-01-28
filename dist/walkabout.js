@@ -79,7 +79,8 @@
     };
 
     Path.prototype.symlink = function(dest, type, callback) {
-      if (type == null) {
+      if (typeof type === 'function') {
+        callback = type;
         type = 'file';
       }
       return fs.symlink(this.path, (Path.isPath(dest) ? dest.path : dest), type, callback);
@@ -93,7 +94,8 @@
     };
 
     Path.prototype.mkdir = function(mode, callback) {
-      if (mode == null) {
+      if (typeof mode === 'function') {
+        callback = mode;
         mode = 0x1ff;
       }
       return fs.mkdir(this.path, mode, callback);
@@ -107,7 +109,8 @@
     };
 
     Path.prototype.mkdirp = function(mode, callback) {
-      if (mode == null) {
+      if (typeof mode === 'function') {
+        callback = mode;
         mode = 0x1ff;
       }
       return mkdirp.sync(this.path, mode, callback);
@@ -148,7 +151,8 @@
     };
 
     Path.prototype.realpath = function(cache, callback) {
-      if (cache == null) {
+      if (typeof cache === 'function') {
+        callback = cache;
         cache = void 0;
       }
       return fs.realpath(this.path, cache, callback);
@@ -162,7 +166,8 @@
     };
 
     Path.prototype.read_file = function(encoding, callback) {
-      if (encoding == null) {
+      if (typeof encoding === 'function') {
+        callback = encoding;
         encoding = 'utf8';
       }
       return fs.readFile(this.path, encoding, callback);
@@ -184,7 +189,8 @@
     };
 
     Path.prototype.write_file = function(data, encoding, callback) {
-      if (encoding == null) {
+      if (typeof encoding === 'function') {
+        callback = encoding;
         encoding = 'utf8';
       }
       return fs.writeFile(this.path, data, encoding, callback);

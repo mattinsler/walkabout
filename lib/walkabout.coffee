@@ -53,19 +53,28 @@ class Path
   link_sync: (dest) ->
     fs.linkSync(@path, (if Path.isPath(dest) then dest.path else dest))
   
-  symlink: (dest, type = 'file', callback) ->
+  symlink: (dest, type, callback) ->
+    if typeof type is 'function'
+      callback = type
+      type = 'file'
     fs.symlink(@path, (if Path.isPath(dest) then dest.path else dest), type, callback)
 
   symlink_sync: (dest, type = 'file') ->
     fs.symlinkSync(@path, (if Path.isPath(dest) then dest.path else dest), type)
   
-  mkdir: (mode = 0o777, callback) ->
+  mkdir: (mode, callback) ->
+    if typeof mode is 'function'
+      callback = mode
+      mode = 0o777
     fs.mkdir(@path, mode, callback)
   
   mkdir_sync: (mode = 0o777) ->
     fs.mkdirSync(@path, mode)
   
-  mkdirp: (mode = 0o777, callback) ->
+  mkdirp: (mode, callback) ->
+    if typeof mode is 'function'
+      callback = mode
+      mode = 0o777
     mkdirp.sync(@path, mode, callback)
   
   mkdirp_sync: (mode = 0o777) ->
@@ -85,13 +94,19 @@ class Path
   readlink_sync: ->
     fs.readlinkSync(@path)
   
-  realpath: (cache = undefined, callback) ->
+  realpath: (cache, callback) ->
+    if typeof cache is 'function'
+      callback = cache
+      cache = undefined
     fs.realpath(@path, cache, callback)
   
   realpath_sync: (cache = undefined) ->
     fs.realpathSync(@path, cache)
   
-  read_file: (encoding = 'utf8', callback) ->
+  read_file: (encoding, callback) ->
+    if typeof encoding is 'function'
+      callback = encoding
+      encoding = 'utf8'
     fs.readFile(@path, encoding, callback)
 
   read_file_sync: (encoding = 'utf8') ->
@@ -103,7 +118,10 @@ class Path
   stat_sync: ->
     fs.statSync(@path)
   
-  write_file: (data, encoding = 'utf8', callback) ->
+  write_file: (data, encoding, callback) ->
+    if typeof encoding is 'function'
+      callback = encoding
+      encoding = 'utf8'
     fs.writeFile(@path, data, encoding, callback)
     
   write_file_sync: (data, encoding = 'utf8') ->
