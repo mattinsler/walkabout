@@ -55,11 +55,11 @@
     };
 
     walkabout.prototype.exists = function(callback) {
-      return PATH.exists(this.path, callback);
+      return (fs.exists || PATH.exists)(this.path, callback);
     };
 
     walkabout.prototype.exists_sync = function() {
-      return PATH.existsSync(this.path);
+      return (fs.existsSync || PATH.existsSync)(this.path);
     };
 
     walkabout.prototype.create_read_stream = function() {
@@ -329,7 +329,7 @@
     };
 
     walkabout.prototype.directory = function() {
-      return walkabout(this.dirname);
+      return new walkabout(this.dirname);
     };
 
     return walkabout;

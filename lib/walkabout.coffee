@@ -35,10 +35,10 @@ class walkabout
 
   # PATH METHODS
   exists: (callback) ->
-    PATH.exists(@path, callback)
+    (fs.exists or PATH.exists)(@path, callback)
 
   exists_sync: ->
-    PATH.existsSync(@path)
+    (fs.existsSync or PATH.existsSync)(@path)
 
   # FS METHODS
   create_read_stream: ->
@@ -232,7 +232,7 @@ class walkabout
     files.filter(opts.filter)
   
   directory: ->
-    walkabout(@dirname)
+    new walkabout(@dirname)
 
 module.exports = (path) ->
   new walkabout(path)
