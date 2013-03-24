@@ -1,5 +1,5 @@
 (function() {
-  var PATH, Path, fs, mkdirp, rimraf, util, _,
+  var PATH, fs, mkdirp, rimraf, util, walkabout, _,
     __slice = [].slice;
 
   fs = require('fs');
@@ -14,9 +14,9 @@
 
   rimraf = require('rimraf');
 
-  Path = (function() {
+  walkabout = (function() {
 
-    function Path(path) {
+    function walkabout(path) {
       if (path == null) {
         path = process.cwd();
       }
@@ -29,71 +29,71 @@
       this.extension = this.extension.replace(/^\.+/, '');
     }
 
-    Path.isPath = function(candidate) {
+    walkabout.is_walkabout = function(candidate) {
       return (candidate.path != null) && (candidate.dirname != null) && (candidate.filename != null) && (candidate.basename != null);
     };
 
-    Path.prototype.join = function() {
+    walkabout.prototype.join = function() {
       var subpaths;
       subpaths = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       subpaths = subpaths.map(function(p) {
-        if (Path.isPath(p)) {
+        if (walkabout.is_walkabout(p)) {
           return p.path;
         } else {
           return p;
         }
       });
-      return new Path(PATH.join.apply(PATH, [this.path].concat(__slice.call(subpaths))));
+      return new walkabout(PATH.join.apply(PATH, [this.path].concat(__slice.call(subpaths))));
     };
 
-    Path.prototype.toString = function() {
+    walkabout.prototype.toString = function() {
       return this.path;
     };
 
-    Path.prototype.require = function() {
+    walkabout.prototype.require = function() {
       return require(this.path);
     };
 
-    Path.prototype.exists = function(callback) {
+    walkabout.prototype.exists = function(callback) {
       return PATH.exists(this.path, callback);
     };
 
-    Path.prototype.exists_sync = function() {
+    walkabout.prototype.exists_sync = function() {
       return PATH.existsSync(this.path);
     };
 
-    Path.prototype.create_read_stream = function() {
+    walkabout.prototype.create_read_stream = function() {
       return fs.createReadStream(this.path);
     };
 
-    Path.prototype.create_write_stream = function() {
+    walkabout.prototype.create_write_stream = function() {
       return fs.createWriteStream(this.path);
     };
 
-    Path.prototype.link = function(dest, callback) {
-      return fs.link(this.path, (Path.isPath(dest) ? dest.path : dest), callback);
+    walkabout.prototype.link = function(dest, callback) {
+      return fs.link(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), callback);
     };
 
-    Path.prototype.link_sync = function(dest) {
-      return fs.linkSync(this.path, (Path.isPath(dest) ? dest.path : dest));
+    walkabout.prototype.link_sync = function(dest) {
+      return fs.linkSync(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest));
     };
 
-    Path.prototype.symlink = function(dest, type, callback) {
+    walkabout.prototype.symlink = function(dest, type, callback) {
       if (typeof type === 'function') {
         callback = type;
         type = 'file';
       }
-      return fs.symlink(this.path, (Path.isPath(dest) ? dest.path : dest), type, callback);
+      return fs.symlink(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), type, callback);
     };
 
-    Path.prototype.symlink_sync = function(dest, type) {
+    walkabout.prototype.symlink_sync = function(dest, type) {
       if (type == null) {
         type = 'file';
       }
-      return fs.symlinkSync(this.path, (Path.isPath(dest) ? dest.path : dest), type);
+      return fs.symlinkSync(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), type);
     };
 
-    Path.prototype.mkdir = function(mode, callback) {
+    walkabout.prototype.mkdir = function(mode, callback) {
       if (typeof mode === 'function') {
         callback = mode;
         mode = 0x1ff;
@@ -101,14 +101,14 @@
       return fs.mkdir(this.path, mode, callback);
     };
 
-    Path.prototype.mkdir_sync = function(mode) {
+    walkabout.prototype.mkdir_sync = function(mode) {
       if (mode == null) {
         mode = 0x1ff;
       }
       return fs.mkdirSync(this.path, mode);
     };
 
-    Path.prototype.mkdirp = function(mode, callback) {
+    walkabout.prototype.mkdirp = function(mode, callback) {
       if (typeof mode === 'function') {
         callback = mode;
         mode = 0x1ff;
@@ -116,14 +116,14 @@
       return mkdirp.sync(this.path, mode, callback);
     };
 
-    Path.prototype.mkdirp_sync = function(mode) {
+    walkabout.prototype.mkdirp_sync = function(mode) {
       if (mode == null) {
         mode = 0x1ff;
       }
       return mkdirp.sync(this.path, mode);
     };
 
-    Path.prototype.readdir = function(callback) {
+    walkabout.prototype.readdir = function(callback) {
       var _this = this;
       return fs.readdir(this.path, function(err, files) {
         if (err != null) {
@@ -135,22 +135,22 @@
       });
     };
 
-    Path.prototype.readdir_sync = function() {
+    walkabout.prototype.readdir_sync = function() {
       var _this = this;
       return fs.readdirSync(this.path).map(function(f) {
         return _this.join(f);
       });
     };
 
-    Path.prototype.readlink = function(callback) {
+    walkabout.prototype.readlink = function(callback) {
       return fs.readlink(this.path, callback);
     };
 
-    Path.prototype.readlink_sync = function() {
+    walkabout.prototype.readlink_sync = function() {
       return fs.readlinkSync(this.path);
     };
 
-    Path.prototype.realpath = function(cache, callback) {
+    walkabout.prototype.realpath = function(cache, callback) {
       if (typeof cache === 'function') {
         callback = cache;
         cache = void 0;
@@ -158,14 +158,14 @@
       return fs.realpath(this.path, cache, callback);
     };
 
-    Path.prototype.realpath_sync = function(cache) {
+    walkabout.prototype.realpath_sync = function(cache) {
       if (cache == null) {
         cache = void 0;
       }
       return fs.realpathSync(this.path, cache);
     };
 
-    Path.prototype.read_file = function(encoding, callback) {
+    walkabout.prototype.read_file = function(encoding, callback) {
       if (typeof encoding === 'function') {
         callback = encoding;
         encoding = 'utf8';
@@ -173,22 +173,22 @@
       return fs.readFile(this.path, encoding, callback);
     };
 
-    Path.prototype.read_file_sync = function(encoding) {
+    walkabout.prototype.read_file_sync = function(encoding) {
       if (encoding == null) {
         encoding = 'utf8';
       }
       return fs.readFileSync(this.path, encoding);
     };
 
-    Path.prototype.stat = function(callback) {
+    walkabout.prototype.stat = function(callback) {
       return fs.stat(this.path, callback);
     };
 
-    Path.prototype.stat_sync = function() {
+    walkabout.prototype.stat_sync = function() {
       return fs.statSync(this.path);
     };
 
-    Path.prototype.write_file = function(data, encoding, callback) {
+    walkabout.prototype.write_file = function(data, encoding, callback) {
       if (typeof encoding === 'function') {
         callback = encoding;
         encoding = 'utf8';
@@ -196,30 +196,30 @@
       return fs.writeFile(this.path, data, encoding, callback);
     };
 
-    Path.prototype.write_file_sync = function(data, encoding) {
+    walkabout.prototype.write_file_sync = function(data, encoding) {
       if (encoding == null) {
         encoding = 'utf8';
       }
       return fs.writeFileSync(this.path, data, encoding);
     };
 
-    Path.prototype.unlink = function(callback) {
+    walkabout.prototype.unlink = function(callback) {
       return fs.unlink(this.path, callback);
     };
 
-    Path.prototype.unlink_sync = function() {
+    walkabout.prototype.unlink_sync = function() {
       return fs.unlinkSync(this.path);
     };
 
-    Path.prototype.rm_rf = function(callback) {
+    walkabout.prototype.rm_rf = function(callback) {
       return rimraf(this.path, callback);
     };
 
-    Path.prototype.rm_rf_sync = function() {
+    walkabout.prototype.rm_rf_sync = function() {
       return rimraf.sync(this.path);
     };
 
-    Path.prototype.is_directory_empty = function(callback) {
+    walkabout.prototype.is_directory_empty = function(callback) {
       return this.readdir(function(err, files) {
         if ((err != null) && 'ENOENT' !== err.code) {
           return callback(err);
@@ -228,7 +228,7 @@
       });
     };
 
-    Path.prototype.is_directory_empty_sync = function() {
+    walkabout.prototype.is_directory_empty_sync = function() {
       try {
         return this.readdir_sync().length === 0;
       } catch (e) {
@@ -239,7 +239,7 @@
       return false;
     };
 
-    Path.prototype.copy = function(to, callback) {
+    walkabout.prototype.copy = function(to, callback) {
       var src;
       src = this;
       return src.exists(function(err, exists) {
@@ -250,7 +250,7 @@
         if (!exists) {
           return callback(new Error("File " + src + " does not exist."));
         }
-        dest = Path.isPath(to) ? to : new Path(to);
+        dest = walkabout.is_walkabout(to) ? to : new walkabout(to);
         return dest.exists(function(err, exists) {
           var input, output;
           if (err != null) {
@@ -266,33 +266,33 @@
       });
     };
 
-    Path.prototype.copy_sync = function(to) {
+    walkabout.prototype.copy_sync = function(to) {
       var dest;
       if (!this.exists_sync()) {
         throw new Error("File " + this + " does not exist.");
       }
-      dest = Path.isPath(to) ? to : new Path(to);
+      dest = walkabout.is_walkabout(to) ? to : new walkabout(to);
       if (dest.exists_sync()) {
         throw new Error("File " + to + " already exists.");
       }
       return dest.write_file_sync(this.read_file_sync());
     };
 
-    Path.prototype.is_directory = function(callback) {
+    walkabout.prototype.is_directory = function(callback) {
       return this.stat(function(err, stats) {
         return callback(err, stats != null ? stats.isDirectory() : null);
       });
     };
 
-    Path.prototype.is_directory_sync = function() {
+    walkabout.prototype.is_directory_sync = function() {
       return this.stat_sync().isDirectory();
     };
 
-    Path.prototype.is_absolute = function() {
+    walkabout.prototype.is_absolute = function() {
       return this.path[0] === '/';
     };
 
-    Path.prototype.ls_sync = function(opts) {
+    walkabout.prototype.ls_sync = function(opts) {
       var ext, files, sub_files, _filter, _ref;
       if (opts == null) {
         opts = {};
@@ -328,14 +328,18 @@
       return files.filter(opts.filter);
     };
 
-    return Path;
+    walkabout.prototype.directory = function() {
+      return walkabout(this.dirname);
+    };
+
+    return walkabout;
 
   })();
 
   module.exports = function(path) {
-    return new Path(path);
+    return new walkabout(path);
   };
 
-  module.exports.Path = Path;
+  module.exports.walkabout = walkabout;
 
 }).call(this);

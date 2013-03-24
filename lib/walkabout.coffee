@@ -6,7 +6,7 @@ PATH = require 'path'
 _ = require 'underscore'
 rimraf = require 'rimraf'
 
-class Path
+class walkabout
   constructor: (path = process.cwd()) ->
     @path = PATH.normalize(path.toString())
     @absolute_path = PATH.resolve(@path)
@@ -20,12 +20,12 @@ class Path
     @basename = PATH.basename(@path, @extension)
     @extension = @extension.replace(/^\.+/, '')
     
-  @isPath: (candidate) ->
+  @is_walkabout: (candidate) ->
     candidate.path? and candidate.dirname? and candidate.filename? and candidate.basename?
     
   join: (subpaths...) ->
-    subpaths = subpaths.map (p) -> if Path.isPath(p) then p.path else p
-    new Path(PATH.join @path, subpaths...)
+    subpaths = subpaths.map (p) -> if walkabout.is_walkabout(p) then p.path else p
+    new walkabout(PATH.join @path, subpaths...)
   
   toString: ->
     @path
@@ -48,19 +48,19 @@ class Path
     fs.createWriteStream(@path)
   
   link: (dest, callback) ->
-    fs.link(@path, (if Path.isPath(dest) then dest.path else dest), callback)
+    fs.link(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), callback)
   
   link_sync: (dest) ->
-    fs.linkSync(@path, (if Path.isPath(dest) then dest.path else dest))
+    fs.linkSync(@path, (if walkabout.is_walkabout(dest) then dest.path else dest))
   
   symlink: (dest, type, callback) ->
     if typeof type is 'function'
       callback = type
       type = 'file'
-    fs.symlink(@path, (if Path.isPath(dest) then dest.path else dest), type, callback)
+    fs.symlink(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), type, callback)
 
   symlink_sync: (dest, type = 'file') ->
-    fs.symlinkSync(@path, (if Path.isPath(dest) then dest.path else dest), type)
+    fs.symlinkSync(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), type)
   
   mkdir: (mode, callback) ->
     if typeof mode is 'function'
@@ -158,7 +158,7 @@ class Path
       return callback(err) if err?
       return callback(new Error("File #{src} does not exist.")) unless exists
     
-      dest = if Path.isPath(to) then to else new Path(to)
+      dest = if walkabout.is_walkabout(to) then to else new walkabout(to)
       dest.exists (err, exists) ->
         return callback(err) if err?
         return callback(new Error("File #{to} already exists.")) if exists
@@ -169,7 +169,7 @@ class Path
   
   copy_sync: (to) ->
     throw new Error("File #{@} does not exist.") unless @exists_sync()
-    dest = if Path.isPath(to) then to else new Path(to)
+    dest = if walkabout.is_walkabout(to) then to else new walkabout(to)
     throw new Error("File #{to} already exists.") if dest.exists_sync()
 
     dest.write_file_sync(@read_file_sync())
@@ -230,11 +230,11 @@ class Path
       Array::push.apply(files, sub_files)
     
     files.filter(opts.filter)
-
-
-
+  
+  directory: ->
+    walkabout(@dirname)
 
 module.exports = (path) ->
-  new Path(path)
+  new walkabout(path)
 
-module.exports.Path = Path
+module.exports.walkabout = walkabout
