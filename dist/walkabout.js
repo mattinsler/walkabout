@@ -51,7 +51,7 @@
     };
 
     walkabout.prototype.require = function() {
-      return require(this.path);
+      return require(this.absolute_path);
     };
 
     walkabout.prototype.exists = function(callback) {
@@ -319,8 +319,12 @@
       files = this.readdir_sync();
       if (opts.recursive) {
         sub_files = _.chain(files).collect(function(f) {
-          if (f.is_directory_sync()) {
-            return f.ls_sync(opts);
+          try {
+            if (f.is_directory_sync()) {
+              return f.ls_sync(opts);
+            }
+          } catch (err) {
+
           }
         }).flatten().compact().value();
         Array.prototype.push.apply(files, sub_files);

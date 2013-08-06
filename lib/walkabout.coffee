@@ -31,7 +31,7 @@ class walkabout
     @path
 
   require: ->
-    require(@path)
+    require(@absolute_path)
 
   # PATH METHODS
   exists: (callback) ->
@@ -223,7 +223,10 @@ class walkabout
     
     if opts.recursive
       sub_files = _.chain(files).collect (f) ->
-        f.ls_sync(opts) if f.is_directory_sync()
+        try
+          f.ls_sync(opts) if f.is_directory_sync()
+        catch err
+          # nerf
       .flatten()
       .compact()
       .value()

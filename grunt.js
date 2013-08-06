@@ -1,15 +1,16 @@
 module.exports = function(grunt) {
   
   grunt.loadNpmTasks('grunt-contrib');
-  grunt.loadNpmTasks('grunt-simple-mocha');
+  // grunt.loadNpmTasks('grunt-simple-mocha');
 
   // Project configuration.
   grunt.initConfig({
     pkg: '<json:package.json>',
+    clean: ['dist'],
     coffee: {
       compile: {
         files: {
-          'dist/*.js': 'lib/*.coffee'
+          'dist/*.js': 'lib/**/*.coffee'
         }
       }
     },
@@ -20,7 +21,7 @@ module.exports = function(grunt) {
     }
   });
   
-  grunt.registerTask('test', 'simplemocha');
+  // grunt.registerTask('test', 'simplemocha');
   // Default task.
-  grunt.registerTask('default', 'coffee test');
+  grunt.registerTask('default', ['clean', 'coffee']);
 };
