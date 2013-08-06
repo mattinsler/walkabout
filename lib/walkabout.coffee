@@ -35,109 +35,109 @@ class walkabout
 
   # PATH METHODS
   exists: (callback) ->
-    (fs.exists or PATH.exists)(@path, callback)
+    (fs.exists or PATH.exists)(@absolute_path, callback)
 
   exists_sync: ->
-    (fs.existsSync or PATH.existsSync)(@path)
+    (fs.existsSync or PATH.existsSync)(@absolute_path)
 
   # FS METHODS
   create_read_stream: ->
-    fs.createReadStream(@path)
+    fs.createReadStream(@absolute_path)
   
   create_write_stream: ->
-    fs.createWriteStream(@path)
+    fs.createWriteStream(@absolute_path)
   
   link: (dest, callback) ->
-    fs.link(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), callback)
+    fs.link(@absolute_path, (if walkabout.is_walkabout(dest) then dest.path else dest), callback)
   
   link_sync: (dest) ->
-    fs.linkSync(@path, (if walkabout.is_walkabout(dest) then dest.path else dest))
+    fs.linkSync(@absolute_path, (if walkabout.is_walkabout(dest) then dest.path else dest))
   
   symlink: (dest, type, callback) ->
     if typeof type is 'function'
       callback = type
       type = 'file'
-    fs.symlink(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), type, callback)
+    fs.symlink(@absolute_path, (if walkabout.is_walkabout(dest) then dest.path else dest), type, callback)
 
   symlink_sync: (dest, type = 'file') ->
-    fs.symlinkSync(@path, (if walkabout.is_walkabout(dest) then dest.path else dest), type)
+    fs.symlinkSync(@absolute_path, (if walkabout.is_walkabout(dest) then dest.path else dest), type)
   
   mkdir: (mode, callback) ->
     if typeof mode is 'function'
       callback = mode
       mode = 0o777
-    fs.mkdir(@path, mode, callback)
+    fs.mkdir(@absolute_path, mode, callback)
   
   mkdir_sync: (mode = 0o777) ->
-    fs.mkdirSync(@path, mode)
+    fs.mkdirSync(@absolute_path, mode)
   
   mkdirp: (mode, callback) ->
     if typeof mode is 'function'
       callback = mode
       mode = 0o777
-    mkdirp.sync(@path, mode, callback)
+    mkdirp.sync(@absolute_path, mode, callback)
   
   mkdirp_sync: (mode = 0o777) ->
-    mkdirp.sync(@path, mode)
+    mkdirp.sync(@absolute_path, mode)
 
   readdir: (callback) ->
-    fs.readdir @path, (err, files) =>
+    fs.readdir @absolute_path, (err, files) =>
       return callback(err) if err?
       callback(err, files.map (f) => @join(f))
 
   readdir_sync: ->
-    fs.readdirSync(@path).map (f) => @join(f)
+    fs.readdirSync(@absolute_path).map (f) => @join(f)
   
   readlink: (callback) ->
-    fs.readlink(@path, callback)
+    fs.readlink(@absolute_path, callback)
   
   readlink_sync: ->
-    fs.readlinkSync(@path)
+    fs.readlinkSync(@absolute_path)
   
   realpath: (cache, callback) ->
     if typeof cache is 'function'
       callback = cache
       cache = undefined
-    fs.realpath(@path, cache, callback)
+    fs.realpath(@absolute_path, cache, callback)
   
   realpath_sync: (cache = undefined) ->
-    fs.realpathSync(@path, cache)
+    fs.realpathSync(@absolute_path, cache)
   
   read_file: (encoding, callback) ->
     if typeof encoding is 'function'
       callback = encoding
       encoding = 'utf8'
-    fs.readFile(@path, encoding, callback)
+    fs.readFile(@absolute_path, encoding, callback)
 
   read_file_sync: (encoding = 'utf8') ->
-    fs.readFileSync(@path, encoding)
+    fs.readFileSync(@absolute_path, encoding)
   
   stat: (callback) ->
-    fs.stat(@path, callback)
+    fs.stat(@absolute_path, callback)
   
   stat_sync: ->
-    fs.statSync(@path)
+    fs.statSync(@absolute_path)
   
   write_file: (data, encoding, callback) ->
     if typeof encoding is 'function'
       callback = encoding
       encoding = 'utf8'
-    fs.writeFile(@path, data, encoding, callback)
+    fs.writeFile(@absolute_path, data, encoding, callback)
     
   write_file_sync: (data, encoding = 'utf8') ->
-    fs.writeFileSync(@path, data, encoding)
+    fs.writeFileSync(@absolute_path, data, encoding)
   
   unlink: (callback) ->
-    fs.unlink(@path, callback)
+    fs.unlink(@absolute_path, callback)
   
   unlink_sync: ->
-    fs.unlinkSync(@path)
+    fs.unlinkSync(@absolute_path)
   
   rm_rf: (callback) ->
-    rimraf(@path, callback)
+    rimraf(@absolute_path, callback)
   
   rm_rf_sync: ->
-    rimraf.sync(@path)
+    rimraf.sync(@absolute_path)
 
   # HELPER METHODS
   is_directory_empty: (callback) ->

@@ -55,27 +55,27 @@
     };
 
     walkabout.prototype.exists = function(callback) {
-      return (fs.exists || PATH.exists)(this.path, callback);
+      return (fs.exists || PATH.exists)(this.absolute_path, callback);
     };
 
     walkabout.prototype.exists_sync = function() {
-      return (fs.existsSync || PATH.existsSync)(this.path);
+      return (fs.existsSync || PATH.existsSync)(this.absolute_path);
     };
 
     walkabout.prototype.create_read_stream = function() {
-      return fs.createReadStream(this.path);
+      return fs.createReadStream(this.absolute_path);
     };
 
     walkabout.prototype.create_write_stream = function() {
-      return fs.createWriteStream(this.path);
+      return fs.createWriteStream(this.absolute_path);
     };
 
     walkabout.prototype.link = function(dest, callback) {
-      return fs.link(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), callback);
+      return fs.link(this.absolute_path, (walkabout.is_walkabout(dest) ? dest.path : dest), callback);
     };
 
     walkabout.prototype.link_sync = function(dest) {
-      return fs.linkSync(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest));
+      return fs.linkSync(this.absolute_path, (walkabout.is_walkabout(dest) ? dest.path : dest));
     };
 
     walkabout.prototype.symlink = function(dest, type, callback) {
@@ -83,14 +83,14 @@
         callback = type;
         type = 'file';
       }
-      return fs.symlink(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), type, callback);
+      return fs.symlink(this.absolute_path, (walkabout.is_walkabout(dest) ? dest.path : dest), type, callback);
     };
 
     walkabout.prototype.symlink_sync = function(dest, type) {
       if (type == null) {
         type = 'file';
       }
-      return fs.symlinkSync(this.path, (walkabout.is_walkabout(dest) ? dest.path : dest), type);
+      return fs.symlinkSync(this.absolute_path, (walkabout.is_walkabout(dest) ? dest.path : dest), type);
     };
 
     walkabout.prototype.mkdir = function(mode, callback) {
@@ -98,14 +98,14 @@
         callback = mode;
         mode = 0x1ff;
       }
-      return fs.mkdir(this.path, mode, callback);
+      return fs.mkdir(this.absolute_path, mode, callback);
     };
 
     walkabout.prototype.mkdir_sync = function(mode) {
       if (mode == null) {
         mode = 0x1ff;
       }
-      return fs.mkdirSync(this.path, mode);
+      return fs.mkdirSync(this.absolute_path, mode);
     };
 
     walkabout.prototype.mkdirp = function(mode, callback) {
@@ -113,19 +113,19 @@
         callback = mode;
         mode = 0x1ff;
       }
-      return mkdirp.sync(this.path, mode, callback);
+      return mkdirp.sync(this.absolute_path, mode, callback);
     };
 
     walkabout.prototype.mkdirp_sync = function(mode) {
       if (mode == null) {
         mode = 0x1ff;
       }
-      return mkdirp.sync(this.path, mode);
+      return mkdirp.sync(this.absolute_path, mode);
     };
 
     walkabout.prototype.readdir = function(callback) {
       var _this = this;
-      return fs.readdir(this.path, function(err, files) {
+      return fs.readdir(this.absolute_path, function(err, files) {
         if (err != null) {
           return callback(err);
         }
@@ -137,17 +137,17 @@
 
     walkabout.prototype.readdir_sync = function() {
       var _this = this;
-      return fs.readdirSync(this.path).map(function(f) {
+      return fs.readdirSync(this.absolute_path).map(function(f) {
         return _this.join(f);
       });
     };
 
     walkabout.prototype.readlink = function(callback) {
-      return fs.readlink(this.path, callback);
+      return fs.readlink(this.absolute_path, callback);
     };
 
     walkabout.prototype.readlink_sync = function() {
-      return fs.readlinkSync(this.path);
+      return fs.readlinkSync(this.absolute_path);
     };
 
     walkabout.prototype.realpath = function(cache, callback) {
@@ -155,14 +155,14 @@
         callback = cache;
         cache = void 0;
       }
-      return fs.realpath(this.path, cache, callback);
+      return fs.realpath(this.absolute_path, cache, callback);
     };
 
     walkabout.prototype.realpath_sync = function(cache) {
       if (cache == null) {
         cache = void 0;
       }
-      return fs.realpathSync(this.path, cache);
+      return fs.realpathSync(this.absolute_path, cache);
     };
 
     walkabout.prototype.read_file = function(encoding, callback) {
@@ -170,22 +170,22 @@
         callback = encoding;
         encoding = 'utf8';
       }
-      return fs.readFile(this.path, encoding, callback);
+      return fs.readFile(this.absolute_path, encoding, callback);
     };
 
     walkabout.prototype.read_file_sync = function(encoding) {
       if (encoding == null) {
         encoding = 'utf8';
       }
-      return fs.readFileSync(this.path, encoding);
+      return fs.readFileSync(this.absolute_path, encoding);
     };
 
     walkabout.prototype.stat = function(callback) {
-      return fs.stat(this.path, callback);
+      return fs.stat(this.absolute_path, callback);
     };
 
     walkabout.prototype.stat_sync = function() {
-      return fs.statSync(this.path);
+      return fs.statSync(this.absolute_path);
     };
 
     walkabout.prototype.write_file = function(data, encoding, callback) {
@@ -193,30 +193,30 @@
         callback = encoding;
         encoding = 'utf8';
       }
-      return fs.writeFile(this.path, data, encoding, callback);
+      return fs.writeFile(this.absolute_path, data, encoding, callback);
     };
 
     walkabout.prototype.write_file_sync = function(data, encoding) {
       if (encoding == null) {
         encoding = 'utf8';
       }
-      return fs.writeFileSync(this.path, data, encoding);
+      return fs.writeFileSync(this.absolute_path, data, encoding);
     };
 
     walkabout.prototype.unlink = function(callback) {
-      return fs.unlink(this.path, callback);
+      return fs.unlink(this.absolute_path, callback);
     };
 
     walkabout.prototype.unlink_sync = function() {
-      return fs.unlinkSync(this.path);
+      return fs.unlinkSync(this.absolute_path);
     };
 
     walkabout.prototype.rm_rf = function(callback) {
-      return rimraf(this.path, callback);
+      return rimraf(this.absolute_path, callback);
     };
 
     walkabout.prototype.rm_rf_sync = function() {
-      return rimraf.sync(this.path);
+      return rimraf.sync(this.absolute_path);
     };
 
     walkabout.prototype.is_directory_empty = function(callback) {
